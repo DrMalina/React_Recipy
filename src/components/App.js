@@ -1,29 +1,41 @@
 import React, { useState } from "react";
 import { CssBaseline } from "@material-ui/core";
 import { createMuiTheme } from "@material-ui/core/styles";
-import { orange, amber, lightBlue, cyan } from "@material-ui/core/colors";
+import { orange } from "@material-ui/core/colors";
 import { ThemeProvider } from "@material-ui/styles";
 
 import Header from "./Header";
 import RecipeList from "./RecipeList";
+import SearchBar from "./SearchBar";
 
 const theme = createMuiTheme({
   palette: {
     primary: {
-      main: orange[400]
+      main: orange[600]
     },
-    secondary: amber
+    secondary: orange
   }
 });
 
 const App = () => {
   const [term, setTerm] = useState("");
-  const [query, searchQuery] = useState("");
+  const [query, searchQuery] = useState(null);
 
-  const onFormSubmit = e => {
-    e.preventDefault();
-    searchQuery(term);
-    setTerm("");
+  const onFormSubmit = () => {
+    if (term) {
+      searchQuery(term);
+      setTerm("");
+    }
+  };
+
+  const onInputChange = inputValue => {
+    setTerm(inputValue);
+  };
+
+  const renderResultList = () => {
+    if (query) {
+      return <RecipeList query={query} />;
+    }
   };
 
   return (
@@ -31,18 +43,12 @@ const App = () => {
       <CssBaseline />
       <ThemeProvider theme={theme}>
         <Header />
-        <form className="search-form" onSubmit={onFormSubmit}>
-          <input
-            className="search-bar"
-            type="text"
-            value={term}
-            onChange={e => setTerm(e.target.value)}
-          />
-          <button className="search-button" type="submit">
-            Search
-          </button>
-        </form>
-        <RecipeList query={query} />
+        <SearchBar
+          value={term}
+          onInputChange={onInputChange}
+          onFormSubmit={onFormSubmit}
+        />
+        {renderResultList()}
       </ThemeProvider>
     </div>
   );

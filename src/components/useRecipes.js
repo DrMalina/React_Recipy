@@ -7,13 +7,17 @@ const useRecipes = query => {
 
   const fetchRecipes = async query => {
     setLoading(true);
-    const response = await edamam.get("/search", {
-      params: { q: query, app_id: ID, app_key: KEY }
-    });
 
-    console.log(response.data.hits);
-    setRecipes(response.data.hits);
-    setLoading(false);
+    try {
+      const response = await edamam.get("/search", {
+        params: { q: query, app_id: ID, app_key: KEY, to: 9 }
+      });
+      //console.log(response.data.hits);
+      setRecipes(response.data.hits);
+      setLoading(false);
+    } catch (err) {
+      alert(`Something wrong... ${err}`);
+    }
   };
 
   useEffect(() => {
