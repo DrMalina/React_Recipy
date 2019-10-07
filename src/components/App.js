@@ -33,6 +33,7 @@ const App = () => {
   };
 
   const renderResultList = () => {
+    //only display results when there is a query
     if (query) {
       return <RecipeList query={query} />;
     }
